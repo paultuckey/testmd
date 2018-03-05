@@ -11,7 +11,7 @@ Test markdown the language
 
 Take test automation from the programmers and give it to the testers.
 
-You shouldn't need to be a programmer to do test automation.  You shouldn't need to specify a automated test case in a 
+You shouldn't need to be a programmer to do test automation.  You shouldn't need to specify a automated test case in a
 programming language.
 
 
@@ -19,56 +19,6 @@ programming language.
 simple as it can be but no simpler
 
 needs to be able to be read like words in a novel
-
-
-## Commands
-
-### Open
-
-Open a url (or app in the future)
-
-examples
-
-    open google.com
-    open https://example.com/?abc234=sdf&as=23#123
-    
-```    
-# select stuff    
-in
-open
-find [obj type] [fuzzy text]
-
-# meta
-set [name] to [value]  
-title [title]
-note [note]
-ignore {????}
-cookie ?? maybe: set cookie.xyx to abc
-
-# actions with obj
-tap/click  [obj type] [fuzzy text]
-right click  [obj type] [fuzzy text]
-long tap / long click  [obj type] [fuzzy text]
-hover [obj type] [fuzzy text]
-double click [obj type] [fuzzy text]
-drop on [obj type] [fuzzy text]
-type [text to type]
-swipe [up|down|left|right] by [int]
-
-# page actions
-reload (reload browser)
-back (browser back button)
-forward
-run [language] [script-let]
-```
-
-
-
-
-
-# Language-testmd package for Atom
-
-Adds syntax highlighting and snippets to Testmd (test-markdown) files in Atom.
 
 
 ## Why
@@ -139,31 +89,127 @@ click button I'm feling lucky
 check page url robinhood.com
 ```
 
-
-## Commands
-
-| Command       | Result                                         |
-| ------------- |:----------------------------------------------:|
-| `open [url]`        | Open a url |
-| `note [text]`        | Just a random note specify references to labels start with a # |
-
-
-# Complex example
-
-
+A more complex example:
 
 ```testmd
-note Now check we went to the right place
+title Check we get 10 results per page
+note Search for something then count results
+
 open google.com
-note this relates to requirement #R123 from #sherwood project
+note this relates to requirement #R123 from #sherwood-project
 find field Search
 type Robin Hood
-click button I'm feling lucky
-check page url robinhood.com
+click button search
+find text cached result
+verify count 10
+
 ```
 
 
+## Language Specification
+
+## Commands
+
+```    
+# select stuff    
+in [device/platform]  # selects a thing to run the test on
+open [url/app]  # opens a thing that the test will be run against
+find [type of thing] [text]  # finds a thing on the current page/screen
+
+# meta
+set [$varname] [value]  
+title [title]
+# [note/comment]
+note
+
+# actions with obj
+click [type of thing] [fuzzy text]
+  tap - alias for click
+right click  [type of thing] [fuzzy text]
+long click  [type of thing] [fuzzy text]
+  long tap - alias for long click
+hover [type of thing] [fuzzy text]
+double click [type of thing] [fuzzy text]
+drop on [type of thing] [fuzzy text]
+type [text to type]
+swipe [up|down|left|right] by [int]
+
+# page actions
+reload (reload browser)
+back (browser back button)
+forward
+inject [language] [script-url/ref]
+
+# test actions
+end ??? needed???
+run [test name]  # run another test (note, no circular refs, auto-dupe detect)
+
+# assertion/verification/checking
+good [expression]
+bad [expression]
+
+# waiting (commands by default will wait until there are no ajax calls pending and there have been no dom changes for 0.5s)
+wait for page reload
+wait for ajax
+wait until [type of thing] [fuzzy text]  # wait until a thing exists
+wait for [int][ms|s|m]  # try to avoid using this is make tests pretty hard to automate
+
+```
+
+### Open
+
+Open a url (or app in the future).
+
+    open google.com
+    open https://example.com/?abc234=sdf&as=23#123
+
+### Note
+
+Make a note about anything.
+
+  note A simple note on a line
+  note Part of project #sherwood
+  note see @robinhood for secure keys
+
+
+## type of thing
+
+button
+link (alias for button)
+field
+input (alias for field)
+text
+image
+video
+
+
+## Variables
+
+Always start with a $
+
+Why?  they should look the same everywhere (bash is annoying) and be rerally obvious
+
+a-z, A-Z, 0-9, underscore, dash,
+
+best practice?  
+Think it's better readability than kebab case or camel case?  
+
+Good `word_word` underscore for word separator and all lower case
+Bad `word-word` In most text editors double clicking a word will only select one word not both
+Bad `wordWord` seems less readable
+
+eg, `set $base_url https://preprod.example.com/, $test-env-url`
+
+in unicode languages?   `$多变的`?
+
+Root level objects:
+
+  - cookie eg, `set $cookie.auth_token 24c2bc5b-e684-404e-acdb-67077cb78b42`
+  - header eg, `set $header.Authorization Basic 3Wx1d3VhfmlkOnlqYWNwYX9l`
+  - test eg, `set $test.key_delay 22ms`
+
+
+
+## Contribute
 
 Feel free to report an issue and make a request.
-
-
