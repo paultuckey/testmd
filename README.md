@@ -208,6 +208,28 @@ Root level objects:
   - header eg, `set $header.Authorization Basic 3Wx1d3VhfmlkOnlqYWNwYX9l`
   - test eg, `set $test.key_delay 22ms`
 
+## Timeouts and waiting
+
+By default any command will timeout after 2 minutes it can be changed
+
+`set $test.timeout 1minute`
+
+
+
+
+
+
+## Research
+
+There are dozens of other great test tools and frameworks.  We can stand on the shoulders of giants by getting ideas
+ from the best parts of each.
+
+https://www.cypress.io/
+https://screenster.io/
+https://www.testcraft.io/
+https://endtest.io/
+http://nightwatchjs.org/
+
 
 
 ## Contribute
