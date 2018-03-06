@@ -35,7 +35,7 @@ module.exports = {
         if (!rawLine) rawLine = '';
         let line = rawLine.trim();
         let commandObj = {
-            isValid: false,  // is this command valid syntax for it's type
+            isSyntaxOk: false,  // is this command valid syntax for it's type
             srcLineNum: lineCounter,  // the line of the file/block this came from
 
             cmdType: null,
@@ -62,9 +62,20 @@ module.exports = {
             let noteLineMatch = RegExp('^note\\s+(.*)$', 'i').exec(line);
             if (noteLineMatch) {
                 commandObj.noteValue = noteLineMatch[1];
+                commandObj.isSyntaxOk = true;
             }
         }
-        if ( XRegExp('^set\\s+', 'iu').test(line) ) {
+        if ( XRegExp('^open\\s+', 'i').test(line) ) {
+            commandObj.cmdType = 'open';
+            let openLineMatch = RegExp('^open\\s+(.*)$', 'i').exec(line);
+            if (openLineMatch) {
+                commandObj.openValue = openLineMatch[1];
+                commandObj.cmdVarsUsed = module.exports.parseForVariables(commandObj.openValue, lineCounter);
+                commandObj.isSyntaxOk = true;
+                //console.log('commandObj.cmdVarsUsed', commandObj.cmdVarsUsed);
+            }
+        }
+        if ( XRegExp('^set\\s+', 'i').test(line) ) {
             commandObj.cmdType = 'set';
             //console.log('w', Unicode.w);
             // vars must start with a $ then be followed
@@ -73,34 +84,29 @@ module.exports = {
             if (setLineMatch) {
                 commandObj.varName = '$' + setLineMatch[1];
                 commandObj.varValue = setLineMatch[2];
-
                 commandObj.cmdVarsUsed.push({
-                    usageType: 'varset', usageLineNum: commandObj.srcLineNum, usageVarName: commandObj.varName
+                    usageType: 'varset', usageVarName: commandObj.varName, usageLineNum: commandObj.srcLineNum
                 });
-                let varsUsedInValue = module.exports.parseForVariables(commandObj.varValue);
-                varsUsedInValue.forEach(function(varUsedInValue) {
-                    commandObj.cmdVarsUsed.push({
-                        usageType: 'varget', usageLineNum: commandObj.srcLineNum,
-                        usageVarName: varUsedInValue
-                    });
-                });
-                commandObj.cmdVarsUsed.forEach(function(u) {
-                    testmdObj.allVarsUsed.push(u);
-                });
+                let varsUsedInValue = module.exports.parseForVariables(commandObj.varValue, lineCounter);
+                commandObj.cmdVarsUsed = commandObj.cmdVarsUsed.concat(varsUsedInValue);
+                commandObj.isSyntaxOk = true;
             }
         }
         if (commandObj.cmdType) {
             testmdObj.commands.push(commandObj);
+            testmdObj.allVarsUsed = testmdObj.allVarsUsed.concat(commandObj.cmdVarsUsed);
         }
     },
 
-    parseForVariables: function(varValue) {
+    parseForVariables: function(varValue, lineCounter) {
         let varsUsed = [];
         //let match = null;
         let re = XRegExp('\\$([\\pL0-9.]+)', 'i');
         XRegExp.forEach(varValue, re, function(match) {
             //console.log('got', match);
-            varsUsed.push('$' + match[1]);
+            varsUsed.push({
+                usageType: 'varget', usageVarName: '$' + match[1], usageLineNum: lineCounter
+            });
         });
         return varsUsed;
     }
