@@ -82,26 +82,29 @@ Do use testing terms (test suite, test case, unit test)
 Each line starts with a command of some sort and normally ends with a thing.
 
 ```testmd
-open google.com
-find field Search
-type Robin Hood
-click button I'm feling lucky
-check page url robinhood.com
+
+  open google.com
+  find field Search
+  type Robin Hood
+  click button I'm feling lucky
+  check page url robinhood.com
+
 ```
 
 A more complex example:
 
 ```testmd
-title Check we get 10 results per page
-note Search for something then count results
 
-open google.com
-note this relates to requirement #R123 from #sherwood-project
-find field Search
-type Robin Hood
-click button search
-find text cached result
-verify count 10
+  note Check we get 10 results per page
+  note Search for something then count results
+
+  open google.com
+  note this relates to requirement #R123 from #sherwood-project
+  find field Search
+  type Robin Hood
+  click button search
+  find text cached result
+  verify count 10
 
 ```
 
@@ -118,7 +121,7 @@ find [type of thing] [text]  # finds a thing on the current page/screen
 
 # meta
 set [$varname] [value]  
-title [title]
+name [name]  # (optional) a name for the test that won't change so it can be used by rerun 
 # [note/comment]
 note
 
@@ -138,7 +141,7 @@ swipe [up|down|left|right] by [int]
 reload (reload browser)
 back (browser back button)
 forward
-inject [language] [script-url/ref]
+inject [language] [script-url/ref/block]
 
 # test actions
 end ??? needed???
@@ -198,38 +201,17 @@ Good `word_word` underscore for word separator and all lower case
 Bad `word-word` In most text editors double clicking a word will only select one word not both
 Bad `wordWord` seems less readable
 
-eg, `set $base_url https://preprod.example.com/, $test-env-url`
+eg, `set $base_url https://preprod.example.com/`
 
-in unicode languages?   `$多变的`?
+non-english ok, ideally, is it harder to parse?   `$多变的`?
 
 Root level objects:
 
   - cookie eg, `set $cookie.auth_token 24c2bc5b-e684-404e-acdb-67077cb78b42`
   - header eg, `set $header.Authorization Basic 3Wx1d3VhfmlkOnlqYWNwYX9l`
   - test eg, `set $test.key_delay 22ms`
-
-## Timeouts and waiting
-
-By default any command will timeout after 2 minutes it can be changed
-
-`set $test.timeout 1minute`
-
-
-
-
-
-
-## Research
-
-There are dozens of other great test tools and frameworks.  We can stand on the shoulders of giants by getting ideas
- from the best parts of each.
-
-https://www.cypress.io/
-https://screenster.io/
-https://www.testcraft.io/
-https://endtest.io/
-http://nightwatchjs.org/
-
+    - `type_key_delay`
+    -
 
 
 ## Contribute

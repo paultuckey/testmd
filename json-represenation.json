@@ -1,0 +1,37 @@
+{
+  "_comment": "Key names are purposefully long to help find usages.",
+
+
+  "testTitle": "abcdes ds sad asd asd asd ad",
+  "testName": "signin_as_fryer",
+  "testCommands": [
+    {
+      "cmdType": "open",
+      "openValue": "google.com",
+      "srcLineNum": 2
+    },
+    {
+      "cmdType": "find",
+      "objType": "field",
+      "objSearch": "search",
+      "srcLineNum": 3
+    },
+    {
+      "cmdType": "presskeys",
+      "keysToPress": "Robin Hood",
+      "srcLineNum": 4
+    },
+    {
+      "cmdType": "click",
+      "objType": "button",
+      "objSearch": "I'm feeling lucky",
+      "srcLineNum": 5
+    },
+    {
+      "cmdType": "check",
+      "varName": "$page.url",
+      "checkStr": "robinhood.com",
+      "srcLineNum": 5
+    }
+  ]
+}
