@@ -12,7 +12,7 @@
     "url": "https://github.com/paultuckey/testmd/issues"
   },
   "dependencies": {
-    "underscore": "^1.8.3"
+    "xregexp": "^4.1.1"
   },
   "license": "MIT",
   "private": true,
